@@ -53,54 +53,6 @@ var checkConfigurationTable = function () {
     });
 };
 
-var createRatingTable = function () {
-    "use strict";
-
-    var params = {
-        AttributeDefinitions: [/* required */
-            {
-                AttributeName: "rating_id", /* required */
-                AttributeType: "S" /* required */
-            }
-        ],
-        KeySchema: [/* required */
-            {
-                AttributeName: "rating_id", /* required */
-                KeyType: "HASH" /* required */
-            }
-        ],
-        ProvisionedThroughput: {
-            /* required */
-            ReadCapacityUnits: 5, /* required */
-            WriteCapacityUnits: 5 /* required */
-        },
-        TableName: config.dynamo_table_rating
-    };
-    dynamodb.createTable(params, function (err, data) {
-        if (err) {
-            console.log(err, err.stack);
-        } else {
-            console.log(data);
-        }
-    });
-};
-
-var checkRatingTable = function () {
-    "use strict";
-
-    var params = {
-        TableName: config.dynamo_table_rating
-    };
-    dynamodb.describeTable(params, function (err, data) {
-        if (err) {
-            console.log(err, err.stack);
-            createRatingTable();
-        } else {
-            console.log(data);
-        }
-    });
-};
-
 router.get("/", function (req, res, next) {
     "use strict";
 

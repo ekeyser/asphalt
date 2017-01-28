@@ -8,6 +8,7 @@ AWS.config.loadFromPath(config.aws_config_path);
 var dynamodb = new AWS.DynamoDB({endpoint: new AWS.Endpoint(config.dynamodb_endpoint)});
 var objAppConfig = {};
 var sKey;
+var response;
 
 var getConfiguration = function () {
     "use strict";
@@ -26,6 +27,9 @@ var getConfiguration = function () {
             console.warn(err, err.stack);
         } else {
             console.log(data);
+            response.setHeader("content-type", "application/json");
+            response.send(data.Item.content);
+            // response.send(JSON.stringify(data.Item.content));
         }
     });
 };
@@ -33,11 +37,10 @@ var getConfiguration = function () {
 router.get("/", function (req, res, next) {
     "use strict";
 
-    console.log(util.inspect(req.query.key, {showHidden: true, depth: null}));
+    response = res;
+    // console.log(util.inspect(req.query.key, {showHidden: true, depth: null}));
     sKey = req.query.key;
     getConfiguration();
-    res.setHeader("content-type", "application/json");
-    res.send(JSON.stringify(objAppConfig));
 });
 
 module.exports = router;
